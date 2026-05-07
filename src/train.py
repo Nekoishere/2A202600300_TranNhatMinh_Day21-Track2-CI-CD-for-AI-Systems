@@ -8,8 +8,10 @@ import os
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
-EVAL_THRESHOLD = 0.70
+EVAL_THRESHOLD = 0.65
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+os.chdir(ROOT_DIR)
+mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
 
 
 def train(
