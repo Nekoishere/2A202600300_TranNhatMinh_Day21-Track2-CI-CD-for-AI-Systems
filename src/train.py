@@ -9,12 +9,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
 EVAL_THRESHOLD = 0.70
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def train(
     params: dict,
-    data_path: str = "../data/train_phase1.csv",
-    eval_path: str = "../data/eval.csv",
+    data_path: str = os.path.join(ROOT_DIR, "data", "train_phase1.csv"),
+    eval_path: str = os.path.join(ROOT_DIR, "data", "eval.csv"),
 ) -> float:
     """
     Huan luyen mo hinh va ghi nhan ket qua vao MLflow.
@@ -54,18 +55,18 @@ def train(
         print(f"Accuracy: {acc:.4f} | F1: {f1:.4f}")
 
         # File nay duoc doc boi GitHub Actions o Buoc 2
-        os.makedirs("outputs", exist_ok=True)
-        with open("outputs/metrics.json", "w") as f:
+        os.makedirs(os.path.join(ROOT_DIR, "outputs"), exist_ok=True)
+        with open(os.path.join(ROOT_DIR, "outputs", "metrics.json"), "w") as f:
             json.dump({"accuracy": acc, "f1_score": f1}, f)
 
         # File nay duoc upload len GCS o Buoc 2
-        os.makedirs("models", exist_ok=True)
-        joblib.dump(model, "models/model.pkl")
+        os.makedirs(os.path.join(ROOT_DIR, "models"), exist_ok=True)
+        joblib.dump(model, os.path.join(ROOT_DIR, "models", "model.pkl"))
 
     return acc
 
 
 if __name__ == "__main__":
-    with open("../params.yaml") as f:
+    with open(os.path.join(ROOT_DIR, "params.yaml")) as f:
         params = yaml.safe_load(f)
     train(params)
